@@ -7,6 +7,7 @@
 #include "leds.h"
 
 #include "DefaultFonts.cpp"
+#include "big_digits_font.c"
 
 #define lcd_port  PORTC
 #define lcd_ddr   DDRC

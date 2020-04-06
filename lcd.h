@@ -23,6 +23,7 @@ void lcd_print_str_P(const char*, uint16_t x, uint16_t y);
 
 extern const uint8_t SmallFont[];
 extern const uint8_t BigFont[];
+extern const uint8_t big_digits[];
 
 
 #endif // LCD_H

@@ -57,6 +57,12 @@ int main()
 
 	debug_print_str_P(PSTR("Started\r\n"));
 
+	lcd_set_font(big_digits);
+	lcd_set_fgcolor(LCD_RED);
+
+	lcd_clrscr();
+	lcd_print_str_P(PSTR("22"), 0, 20);
+
 	while(1)
 	{
 		LED_TOGGLE(LED_GREEN);
