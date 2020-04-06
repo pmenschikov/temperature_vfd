@@ -9,7 +9,10 @@ main.o:main.c
 lcd.o:lcd.c
 	avr-gcc -o $@ -c $(C_OPTS) $^
 
-main.elf:main.o lcd.o
+debug.o: debug.c
+	avr-gcc -o $@ -c $(C_OPTS) $^
+
+main.elf:main.o lcd.o debug.o
 	avr-gcc -o $@ -mmcu=$(MCU) $^
 	avr-size $@
 

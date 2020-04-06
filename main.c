@@ -4,6 +4,7 @@
 
 #include "leds.h"
 #include "lcd.h"
+#include "debug.h"
 
 void delay(uint16_t ms)
 {
@@ -18,6 +19,8 @@ static void init(void)
 	LED_INIT();
 
 	lcd_init();
+
+	debug_init();
 }
 
 static void welcome_screen(void)
@@ -42,9 +45,9 @@ int main()
 
 	init();
 
+	debug_print_str_P(PSTR("Init done\r\n"));
 
 	welcome_screen();
-
 
 	LED_ON(LED_GREEN);
 
@@ -52,10 +55,13 @@ int main()
 	lcd_set_fgcolor(LCD_GREEN);
 	lcd_print_str_P(PSTR("Ready"), 0, 0);
 
+	debug_print_str_P(PSTR("Started\r\n"));
+
 	while(1)
 	{
 		LED_TOGGLE(LED_GREEN);
 		delay(500);
+		debug_print_char('*');
 	}
 	return 0;
 }
