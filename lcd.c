@@ -226,7 +226,18 @@ void lcd_print_str_P(const char *str, uint16_t x, uint16_t y)
 	while(ch=pgm_read_byte(str++))
 	{
 		lcd_draw_char(ch, offset, y);
-		offset += current_font.y_size;
+		offset += current_font.x_size;
+	}
+}
+
+void lcd_print_str(const char *str, uint16_t x, uint16_t y)
+{
+	uint16_t offset = x;
+	while( *str )
+	{
+		lcd_draw_char(*str, offset, y);
+		offset += current_font.x_size;
+		str++;
 	}
 }
 

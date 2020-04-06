@@ -50,3 +50,20 @@ void debug_print_ln()
 	debug_print_char('\r');
 	debug_print_char('\n');
 }
+
+static uint8_t h2b(uint8_t v)
+{
+	return v > 9 ? v-10+'A':v+'0';
+}
+
+void debug_print_hex_byte(uint8_t b)
+{
+	debug_print_char(h2b(b>>4));
+	debug_print_char(h2b(b&0xF));
+}
+
+void debug_print_hex_word(uint16_t w)
+{
+	debug_print_hex_byte(w>>8);
+	debug_print_hex_byte(w&0xFF);
+}

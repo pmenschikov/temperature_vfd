@@ -12,7 +12,13 @@ lcd.o:lcd.c
 debug.o: debug.c
 	avr-gcc -o $@ -c $(C_OPTS) $^
 
-main.elf:main.o lcd.o debug.o
+onewire.o:onewire.c
+	avr-gcc -o $@ -c $(C_OPTS) $^
+
+ds18b20.o:ds18b20.c
+	avr-gcc -o $@ -c $(C_OPTS) $^
+
+main.elf:main.o lcd.o debug.o onewire.o ds18b20.o
 	avr-gcc -o $@ -mmcu=$(MCU) $^
 	avr-size $@
 

@@ -2,9 +2,12 @@
 #include <util/delay.h>
 #include <avr/pgmspace.h>
 
+#include <stdio.h>
+
 #include "leds.h"
 #include "lcd.h"
 #include "debug.h"
+#include "ds18b20.h"
 
 void delay(uint16_t ms)
 {
@@ -39,6 +42,36 @@ static void welcome_screen(void)
 	lcd_clrscr();
 }
 
+static void read_temperature(void)
+{
+	int16_t temperature;
+	char buffer[4];
+
+	LED_OFF(LED_RED);
+
+	if( ds_start() )
+	{
+		// DS18B20 found
+		delay(700);
+		ds_readtemp(&temperature);
+
+		temperature /= 16;
+
+		sprintf(buffer, "%d", temperature);
+
+		lcd_print_str(buffer, 160, 20);
+	}
+	else
+	{
+		LED_ON(LED_RED);
+		debug_print_str_P(PSTR("NoDS\r\n"));
+		lcd_clrscr();
+		lcd_print_str_P(PSTR("NoDS"), 180, 20);
+		// DS not found
+	}
+
+}
+
 int main()
 {
 	int i,j;
@@ -61,12 +94,12 @@ int main()
 	lcd_set_fgcolor(LCD_RED);
 
 	lcd_clrscr();
-	lcd_print_str_P(PSTR("22"), 0, 20);
 
 	while(1)
 	{
+		read_temperature();
 		LED_TOGGLE(LED_GREEN);
-		delay(500);
+		delay(1000);
 		debug_print_char('*');
 	}
 	return 0;

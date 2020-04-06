@@ -20,6 +20,7 @@ void lcd_set_bgcolor(uint16_t);
 void lcd_set_font(const uint8_t *font_ptr);
 void lcd_draw_char(char, uint16_t x, uint16_t y);
 void lcd_print_str_P(const char*, uint16_t x, uint16_t y);
+void lcd_print_str(const char *, uint16_t x, uint16_t y);
 
 extern const uint8_t SmallFont[];
 extern const uint8_t BigFont[];
