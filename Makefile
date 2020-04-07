@@ -18,7 +18,10 @@ onewire.o:onewire.c
 ds18b20.o:ds18b20.c
 	avr-gcc -o $@ -c $(C_OPTS) $^
 
-main.elf:main.o lcd.o debug.o onewire.o ds18b20.o
+timer.o:timer.c
+	avr-gcc -o $@ -c $(C_OPTS) $^
+
+main.elf:main.o lcd.o debug.o onewire.o ds18b20.o timer.o
 	avr-gcc -o $@ -mmcu=$(MCU) $^
 	avr-size $@
 

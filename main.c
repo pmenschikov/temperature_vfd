@@ -8,6 +8,7 @@
 #include "lcd.h"
 #include "debug.h"
 #include "ds18b20.h"
+#include "timer.h"
 
 void delay(uint16_t ms)
 {
@@ -24,6 +25,8 @@ static void init(void)
 	lcd_init();
 
 	debug_init();
+
+	timer_init();
 }
 
 static void welcome_screen(void)
@@ -72,6 +75,20 @@ static void read_temperature(void)
 
 }
 
+static void timer1_cb(void)
+{
+	timer_start(0, 1);
+	LED_TOGGLE(LED_GREEN);
+	debug_print_char('*');
+}
+
+static void timer2_cb(void)
+{
+	timer_start(1, 2);
+	LED_TOGGLE(LED_RED);
+	debug_print_char('+');
+}
+
 int main()
 {
 	int i,j;
@@ -95,12 +112,16 @@ int main()
 
 	lcd_clrscr();
 
+	timer_start(0, 1);
+	timer_set_callback(0, timer1_cb);
+	timer_start(1, 2);
+	timer_set_callback(1, timer2_cb);
+	timer_start(2, 2);
+	timer_set_callback(2, read_temperature);
+
 	while(1)
 	{
-		read_temperature();
-		LED_TOGGLE(LED_GREEN);
-		delay(1000);
-		debug_print_char('*');
+		timer_poll();
 	}
 	return 0;
 }
