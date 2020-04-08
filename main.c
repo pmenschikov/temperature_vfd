@@ -9,6 +9,9 @@
 #include "debug.h"
 #include "ds18b20.h"
 #include "timer.h"
+#include "termometer.h"
+#include "shared.h"
+#include "values.h"
 
 void delay(uint16_t ms)
 {
@@ -45,49 +48,29 @@ static void welcome_screen(void)
 	lcd_clrscr();
 }
 
-static void read_temperature(void)
+
+static void timer1_cb(void)
 {
-	int16_t temperature;
 	char buffer[4];
 
-	LED_OFF(LED_RED);
+	timer_start(1, 1);
+	LED_TOGGLE(LED_GREEN);
+	debug_print_char('*');
 
-	if( ds_start() )
+	// show temperature
+	if( temp_sensor_status == 0 )
 	{
-		// DS18B20 found
-		delay(700);
-		ds_readtemp(&temperature);
 
-		temperature /= 16;
-
-		sprintf(buffer, "%d", temperature);
+		sprintf(buffer, "%d", temperature/16);
 
 		lcd_print_str(buffer, 160, 20);
 	}
 	else
 	{
-		LED_ON(LED_RED);
-		debug_print_str_P(PSTR("NoDS\r\n"));
-		lcd_clrscr();
-		lcd_print_str_P(PSTR("NoDS"), 180, 20);
-		// DS not found
+		lcd_print_str_P(PSTR("No DS"), 160, 60);
 	}
-
 }
 
-static void timer1_cb(void)
-{
-	timer_start(0, 1);
-	LED_TOGGLE(LED_GREEN);
-	debug_print_char('*');
-}
-
-static void timer2_cb(void)
-{
-	timer_start(1, 2);
-	LED_TOGGLE(LED_RED);
-	debug_print_char('+');
-}
 
 int main()
 {
@@ -108,16 +91,16 @@ int main()
 	debug_print_str_P(PSTR("Started\r\n"));
 
 	lcd_set_font(big_digits);
-	lcd_set_fgcolor(LCD_RED);
+	lcd_set_fgcolor(LCD_GREEN);
 
 	lcd_clrscr();
 
-	timer_start(0, 1);
-	timer_set_callback(0, timer1_cb);
+	timer_start(TIMER_TERMO, 1);
+	timer_set_callback(TIMER_TERMO, termometer_task);
+
+	// screen update
 	timer_start(1, 2);
-	timer_set_callback(1, timer2_cb);
-	timer_start(2, 2);
-	timer_set_callback(2, read_temperature);
+	timer_set_callback(1, timer1_cb);
 
 	while(1)
 	{
