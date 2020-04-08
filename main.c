@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/pgmspace.h>
+#include <avr/interrupt.h>
 
 #include <stdio.h>
 
@@ -12,6 +13,7 @@
 #include "termometer.h"
 #include "shared.h"
 #include "values.h"
+#include "buttons.h"
 
 void delay(uint16_t ms)
 {
@@ -30,6 +32,9 @@ static void init(void)
 	debug_init();
 
 	timer_init();
+
+	buttons_init();
+
 }
 
 static void welcome_screen(void)
@@ -55,7 +60,6 @@ static void timer1_cb(void)
 
 	timer_start(1, 1);
 	LED_TOGGLE(LED_GREEN);
-	debug_print_char('*');
 
 	// show temperature
 	if( temp_sensor_status == 0 )
@@ -74,8 +78,7 @@ static void timer1_cb(void)
 
 int main()
 {
-	int i,j;
-
+	uint8_t btns = 0;
 	init();
 
 	debug_print_str_P(PSTR("Init done\r\n"));
@@ -102,9 +105,23 @@ int main()
 	timer_start(1, 2);
 	timer_set_callback(1, timer1_cb);
 
+	sei();
+
 	while(1)
 	{
 		timer_poll();
+
+		buttons_poll();
+
+		if( IS_BTN_PRESSED(BUTTON_AUTO) )
+		{
+			debug_print_str_P(PSTR("Btn AUTO pressed\r\n"));
+		}
+
+		if( IS_BTN_RELEASED(BUTTON_AUTO) )
+		{
+			debug_print_str_P(PSTR("Btn AUTO released\r\n"));
+		}
 	}
 	return 0;
 }
