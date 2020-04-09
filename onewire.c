@@ -17,6 +17,11 @@ static void delay_us(uint16_t us)
 uint8_t onewire_init()
 {
 	uint8_t ret;
+	if( !(ONEWIRE_PINS&_BV(ONEWIRE_PIN)) )
+	{
+		// error if permanent 0 on bus
+		return 0;
+	}
 	ONEWIRE_DDR |= _BV(ONEWIRE_PIN);
 	ONEWIRE_PORT &= ~_BV(ONEWIRE_PIN);
 	delay_us(480);
