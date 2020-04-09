@@ -68,7 +68,7 @@ static void timer1_cb(void)
 	if( temp_sensor_status == 0 )
 	{
 
-		sprintf(buffer, "%d", temperature/16);
+		sprintf_P(buffer, PSTR("%d"), temperature/16);
 
 		lcd_set_font(big_digits);
 		lcd_set_fgcolor(LCD_GREEN);
@@ -125,6 +125,31 @@ int main()
 		if( IS_BTN_PRESSED(BUTTON_AUTO) )
 		{
 			modes_swap();
+		}
+
+		if( IS_BTN_PRESSED(BUTTON_10HZ) )
+		{
+			modes_man_set_freq(10);
+		}
+
+		if( IS_BTN_PRESSED(BUTTON_20HZ) )
+		{
+			modes_man_set_freq(20);
+		}
+
+		if( IS_BTN_PRESSED(BUTTON_30HZ) )
+		{
+			modes_man_set_freq(30);
+		}
+
+		if( IS_BTN_PRESSED(BUTTON_40HZ) )
+		{
+			modes_man_set_freq(40);
+		}
+
+		if( IS_BTN_PRESSED(BUTTON_50HZ) )
+		{
+			modes_man_set_freq(50);
 		}
 
 	}
