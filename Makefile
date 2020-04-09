@@ -30,7 +30,10 @@ values.o:values.c
 buttons.o:buttons.c
 	avr-gcc -o $@ -c $(C_OPTS) $^
 
-main.elf:main.o lcd.o debug.o onewire.o ds18b20.o timer.o termometer.o values.o buttons.o
+modes.o:modes.c
+	avr-gcc -o $@ -c $(C_OPTS) $^
+
+main.elf:main.o lcd.o debug.o onewire.o ds18b20.o timer.o termometer.o values.o buttons.o modes.o
 	avr-gcc -o $@ -mmcu=$(MCU) $^
 	avr-size $@
 

@@ -1,6 +1,8 @@
 #ifndef LCD_H
 #define LCD_H
 
+#include <avr/pgmspace.h>
+
 // landscape mode
 #define LCD_WIDTH   480
 #define LCD_HEIGHT  320

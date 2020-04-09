@@ -14,7 +14,7 @@ void buttons_init()
 {
 	PORTF |= BUTTON_MASK; // buttons pull-ups resitors
 
-	// TMR0 - CTC mode, prescaller - 256, ovf rate ~4ms
+	// TMR0 - CTC mode, prescaller - 1024, ovf rate ~16ms
 	TCCR0 = _BV(WGM01) | _BV(CS01) | _BV(CS02) | _BV(CS00);
 
 	TIMSK |= _BV(OCIE0);

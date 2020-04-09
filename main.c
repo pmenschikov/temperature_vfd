@@ -14,6 +14,7 @@
 #include "shared.h"
 #include "values.h"
 #include "buttons.h"
+#include "modes.h"
 
 void delay(uint16_t ms)
 {
@@ -34,6 +35,8 @@ static void init(void)
 	timer_init();
 
 	buttons_init();
+
+	modes_init();
 
 }
 
@@ -67,10 +70,14 @@ static void timer1_cb(void)
 
 		sprintf(buffer, "%d", temperature/16);
 
+		lcd_set_font(big_digits);
+		lcd_set_fgcolor(LCD_GREEN);
 		lcd_print_str(buffer, 160, 20);
 	}
 	else
 	{
+		lcd_set_font(BigFont);
+		lcd_set_fgcolor(LCD_RED);
 		lcd_print_str_P(PSTR("No DS"), 160, 60);
 	}
 }
@@ -105,6 +112,8 @@ int main()
 	timer_start(1, 2);
 	timer_set_callback(1, timer1_cb);
 
+	modes_show();
+
 	sei();
 
 	while(1)
@@ -115,13 +124,9 @@ int main()
 
 		if( IS_BTN_PRESSED(BUTTON_AUTO) )
 		{
-			debug_print_str_P(PSTR("Btn AUTO pressed\r\n"));
+			modes_swap();
 		}
 
-		if( IS_BTN_RELEASED(BUTTON_AUTO) )
-		{
-			debug_print_str_P(PSTR("Btn AUTO released\r\n"));
-		}
 	}
 	return 0;
 }
